@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { fireDB, app } from "../firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+// import { collection, addDoc } from "firebase/firestore";
 
 function Register() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
     const register = () => {
 
         const auth = getAuth(app);
@@ -16,16 +19,15 @@ function Register() {
                 const user = userCredential.user;
                 const userData = {
                     email: user.email,
-                    profilePicUrl: '', 
-                    bio : 'Hi I am using grumper!',
-                }
-
-                
+                    profilePicUrl: '',
+                    bio: 'Hi I am using grumper!',
+                };
+                setDoc(doc(fireDB, 'users', user.uid), userData);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }
+    };
     return (
         <div className="h-screen flex justify-between flex-col overflow-x-hidden bg-primary">
             {/* Top Shape */}
@@ -47,7 +49,6 @@ function Register() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="email"
-                        //focuse-border-not-working- check out tailwind css doc
                         className="border border-primary h-10 rounded-sm pl-5 hover:border-secondary text-primary-dark placeholder:text-primary-dark-grey focus:outline-none focus:ring-2 focus:ring-primary-dark-grey focus:border-none"
                     />
                     <input
@@ -55,11 +56,10 @@ function Register() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="password"
-                        //focuse-border-not-working- check out tailwind css doc
                         className="border border-primary h-10 rounded-sm pl-5 hover:border-secondary text-primary-dark placeholder:text-primary-dark-grey focus:outline-none focus:ring-2 focus:ring-primary-dark-grey focus:border-none"
                     />
                     <input
-                        type="text"
+                        type="password"
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="confirm password"
                         //focuse-border-not-working- check out tailwind css doc
