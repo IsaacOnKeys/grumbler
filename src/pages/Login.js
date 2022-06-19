@@ -1,10 +1,16 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useState } from "react";
+import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import { app, fireDB } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-function Login() {
+import Loader from "../components/Loader";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+function Login() {
+  const loading = useSelector(state => state);
+  console.log(loading);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,15 +22,18 @@ function Login() {
         const user = userCredential.user;
         getDoc(doc(fireDB, 'users', user.uid)).then((user) => {
           localStorage.setItem('grumper.user', JSON.stringify({ ...user.data(), id: user.id }))
+          toast.success('Login Successful')
         });
       })
       .catch((error) => {
-        console.log(error);
+        toast.error('login failed')
       });
   };
 
   return (
     <div className="h-screen flex justify-between flex-col overflow-x-hidden">
+      <Loader />
+
       {/* Top Shape */}
       <div className="flex justify-start" >
         <div className="h-35 bg-primary w-80 skew-x-[35deg] -ml-16 flex items-center justify-center">
