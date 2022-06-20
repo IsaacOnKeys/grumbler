@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import DefaultLayout from '../components/DefaultLayout';
 
 function Home() {
     return (
-        <div>Home</div>
+        <DefaultLayout>
+            <div>Home Page</div>
+        </DefaultLayout>
     )
 }
 

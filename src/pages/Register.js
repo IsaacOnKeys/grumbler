@@ -1,20 +1,26 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useSelector, useDispatch } from 'react-redux';
 import { fireDB, app } from "../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import Loader from "../components/Loader";
 
-function Register() {
-
+ 
+function Register() {  
+ 
+ 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const { loading } = useSelector(store => store);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    
     const register = () => {
-
         const auth = getAuth(app);
+        dispatch({ type: 'showLoading' });
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
@@ -24,13 +30,19 @@ function Register() {
                     bio: 'Hi I am using grumper!',
                 };
                 setDoc(doc(fireDB, 'users', user.uid), userData);
+                dispatch({ type: 'hideLoading' });
+                toast.success("Registration Successful!")
+                navigate('/login'); 
             })
             .catch((error) => {
+                dispatch({ type: 'hideLoading' });
+                toast.error("Invalid username or password")
                 console.log(error);
             });
     };
     return (
         <div className="h-screen flex justify-between flex-col overflow-x-hidden bg-primary">
+               {loading && <Loader/>} 
             {/* Top Shape */}
             <div className="flex justify-start">
                 <div className="h-35 bg-white w-80 skew-x-[35deg] -ml-16 flex items-center justify-center">
@@ -53,7 +65,7 @@ function Register() {
                         className="border border-primary h-10 rounded-sm pl-5 hover:border-secondary text-primary-dark placeholder:text-primary-dark-grey focus:outline-none focus:ring-2 focus:ring-primary-dark-grey focus:border-none"
                     />
                     <input
-                        type="text"
+                        type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="password"
@@ -61,6 +73,7 @@ function Register() {
                     />
                     <input
                         type="password"
+                        value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="confirm password"
                         //focuse-border-not-working- check out tailwind css doc

@@ -1,21 +1,22 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
 import { app, fireDB } from "../firebaseConfig";
 import Loader from "../components/Loader";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
-  const loading = useSelector(state => state);
-  console.log(loading);
+  const { loading } = useSelector(store => store);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const login = () => {
-
+    dispatch({ type: 'showLoading' });
     const auth = getAuth(app);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -24,15 +25,18 @@ function Login() {
           localStorage.setItem('grumper.user', JSON.stringify({ ...user.data(), id: user.id }))
           toast.success('Login Successful')
         });
+        dispatch({ type: 'hideLoading' });
+        navigate('/')
       })
       .catch((error) => {
-        toast.error('login failed')
+        toast.error('login failed');
+        dispatch({ type: 'hideLoading' });
       });
   };
 
   return (
     <div className="h-screen flex justify-between flex-col overflow-x-hidden">
-      <Loader />
+      {loading && <Loader />}
 
       {/* Top Shape */}
       <div className="flex justify-start" >
