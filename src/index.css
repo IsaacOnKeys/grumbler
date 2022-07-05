@@ -1,14 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
+html,
+body {
+  overflow: hidden !important;
+}
 
 .grumbler-head {
   font-family: Angry;
 }
 .login-card {
   box-shadow: 0 0 3px #eee;
+}
+.post-card {
+  box-shadow: 0 0 2px #eee;
 }
 /* Webfont: Angry-Regular */
 @font-face {
@@ -19,3 +21,6 @@
   font-weight: normal;
   text-rendering: optimizeLegibility;
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

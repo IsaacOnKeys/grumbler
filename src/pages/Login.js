@@ -1,6 +1,6 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { app, fireDB } from "../firebaseConfig";
@@ -34,6 +34,12 @@ function Login() {
       });
   };
 
+  useEffect(() => {
+    if (localStorage.getItem('grumper.user')) {
+      navigate('/');
+    }
+  });
+  
   return (
     <div className="h-screen flex justify-between flex-col overflow-x-hidden">
       {loading && <Loader />}

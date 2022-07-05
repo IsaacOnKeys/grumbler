@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useSelector, useDispatch } from 'react-redux';
@@ -40,6 +40,11 @@ function Register() {
                 console.log(error);
             });
     };
+    useEffect(() => {
+        if (localStorage.getItem('grumper.user')) {
+            navigate('/');
+        }
+    });
     return (
         <div className="h-screen flex justify-between flex-col overflow-x-hidden bg-primary">
                {loading && <Loader/>} 
