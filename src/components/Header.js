@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
-import { CgMenuGridR } from 'react-icons/cg'
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { CgMenuGridR } from 'react-icons/cg';
+
 
 function Header() {
     const location = useLocation();
     const [showMenu, setShowMenu] = useState(false);
+    const navigate = useNavigate();
     const menuItems = [
         {
             title: 'Home',
@@ -46,6 +48,13 @@ function Header() {
                             </Link>
                         );
                     })}
+                    <h1
+                        className='text-primary-darker cursor-pointer'
+                        onClick={() => {
+                            localStorage.removeItem('grumper.user')
+                            navigate('/login')
+                        }}>Logout
+                    </h1>
                 </div>
 
                 {/* Mobile view */}
@@ -60,6 +69,13 @@ function Header() {
                                 </Link>
                             );
                         })}
+                        <h1
+                            className='text-primary-darker cursor-pointer'
+                            onClick={() => {
+                                localStorage.removeItem('grumper.user')
+                                navigate('/login')
+                            }}>Logout
+                        </h1>
                     </div>
                 )}
             </div>

@@ -22,7 +22,7 @@ function Home() {
     useEffect(() => {
         getData();
     }, []);
-    
+
     return (
         <DefaultLayout>
             <div className="grid grid-cols-4 md:grid-cols-1 gap-10">
