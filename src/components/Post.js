@@ -15,10 +15,10 @@ function Post({ post }) {
       <div className="flex items-center post-card">
         <div className="h-8 w-8 font-['Angry'] flex justify-center items-center  text-secondary border-2 border-primary rounded-full mr-2">
           <span className="text-2xl relative top-[.2rem]">
-            {/* {getUserName()[0]} */}
+            {getUserName()[0]}
           </span>
         </div>
-        {/* <span>{getUserName()}</span> */}
+        <span>{getUserName()}</span>
       </div>
       <div className="w-full text-center flex justify-center post-card">
         <img src={post.imageURL} alt="" className="h-60 w-60 object-contain" />

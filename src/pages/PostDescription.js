@@ -23,8 +23,10 @@ function PostDescription() {
     dispatch({ type: 'showLoading' });
     getDoc(doc(fireDB, 'posts', params.id))
       .then((response) => {
-        console.log(response.data())
-        setPost({ ...response.data(), id: response.id })
+        setPost({ ...response.data(), id: response.id });
+        if (response.data().approve.find((user => user.id === currentUser.id))) {
+          setAlreadyApproved(true)
+        };
         dispatch({ type: 'hideLoading' });
       }).catch(() => {
         dispatch({ type: 'hideLoading' });
@@ -35,10 +37,18 @@ function PostDescription() {
   });
   const likeOrUnlikePost = () => {
     const updatedApproval = post.approve;
-    updatedApproval.push({
-      id: currentUser.id,
-      email: currentUser.email
-    })
+
+    if (alreadyApproved) {
+      updatedApproval = post.approve.filter((user) => user.id !== currentUser.id)
+    } else {
+      updatedApproval.push({
+        id: currentUser.id,
+        email: currentUser.email
+      });
+
+    }
+
+
     setDoc(doc(fireDB, 'posts', post.id), { ...post, approve: updatedApproval })
       .then(() => {
         getData();
@@ -69,7 +79,7 @@ function PostDescription() {
             </div>
             <div className="post-card p2 flex width-full items-center space-x-5">
               <div className="flex space-x-2 items-center">
-                <FcApprove size={25} onClick={likeOrUnlikePost} />
+                <FcApprove size={25} onClick={likeOrUnlikePost} color={alreadyApproved ? 'secondary' : 'primary'} />
                 <h3>{post.approve.length}</h3>
               </div>
               <div className="flex space-x-2 items-center">
